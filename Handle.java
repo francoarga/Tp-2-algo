@@ -1,27 +1,18 @@
 package aed;
 
+
 public class Handle {
     private int valor;
 
-    public Handle() {
-        this.valor = -1; // Estado inicial del Handle
+    public Handle(int v){
+        valor = v;
     }
 
-    public void cambiarHandle(int pos) {
-        if (pos >= 0) {
-            this.valor = pos;
-        }
+    public void modificar(int v){
+        valor = v;
     }
 
-    public int obtenerValor() {
-        return this.valor;
-    }
-
-    public boolean estaInicializado() {
-        return this.valor != -1;
-    }
-
-    public void resetear() {
-        this.valor = -1;
+    public int valor(){
+        return valor;
     }
 }

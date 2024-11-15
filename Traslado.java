@@ -8,7 +8,7 @@ public class Traslado {
     int gananciaNeta;
     int timestamp;
     Handle handleRed;
-    Handle handAnt;
+    Handle handleAnt;
 
     public Traslado(int id, int origen, int destino, int gananciaNeta, int timestamp){
         this.id = id;
@@ -18,7 +18,19 @@ public class Traslado {
         this.timestamp = timestamp;
     }
 
-    public int gananciaNeta(){
-        return gananciaNeta;
+    public void modificarHandle(String cual, int i){
+        if(cual.equals("Red")){
+            handleRed.modificar(i);
+        } else {
+            handleAnt.modificar(i);
+        }
+    }
+
+    public int posRedituable(){
+        return handleRed.valor();
+    }
+
+    public int posAntiguo(){
+        return handleAnt.valor();
     }
 }

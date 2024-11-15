@@ -1,32 +1,42 @@
 package aed;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 
-public class maxHeap<T extends Comparable<T>> {
-    private ArrayList<T> arr;
+
+public class maxHeap<Traslado> {
+    private ArrayList<Traslado> arr;
     private Integer longitud;
+    private Comparator<Traslado> c;
+
 
     //constructor
-    public maxHeap(){
-        arr = new ArrayList<T>();
+    public maxHeap(Comparator<Traslado> com){
+        arr = new ArrayList<Traslado>();
         longitud = 0;
+        c = com;
     }
 
     //devuelve el maximo del heap
-    public T maximo(){
+    public Traslado maximo(){
         return arr.get(0);
     }
 
     //insertar elemento al heap
-    public void insertar(T elem){
+    public void insertar(Traslado elem){
         arr.add(elem);
         longitud +=1;
         int i = longitud-1;
         while(i >= 1 && i < longitud){
-            if(arr.get(i).compareTo(arr.get((((i-1)/2)))) > 0){        //Si es mayor que el padre, sift up
+            if(c.compare(arr.get(i), arr.get((((i-1)/2)))) > 0){        //Si es mayor que el padre, sift up
                 arr.set((i-1)/2, arr.get(i));
                 i = (i-1)/2;
             }
+        }
+        if (c instanceof ComparadorAntiguedad){
+            elem.modificarHandle("Ant", i);
+        } else {
+            elem.modificarHandle("Red", i);
         }
     }
 
