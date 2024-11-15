@@ -3,9 +3,9 @@ package aed;
 import java.util.ArrayList;
 
 public class BestEffort {
-    private Heap masRedituables;   //heap a implementar sobre un array
-    private Heap masAntiguos;
-    private Heap superavit;
+    private maxHeap masRedituables;   //heap a implementar sobre un array
+    private maxHeap masAntiguos;
+    private maxHeap superavit;
     private ArrayList<Integer> gananciaMax;
     private ArrayList<Integer> perdidaMax;
     private int[] ganancia;
@@ -23,7 +23,7 @@ public class BestEffort {
         perdida = new int[cantCiudades];                             // O(C)
         masRedituables = null;
         masAntiguos = null;
-        masRedituables.heapify(traslados);  //condcion de prio????      O(T)
+        masRedituables.heapify(traslados);                     //      O(T)
         masAntiguos.heapify(traslados);                              // O(T)
     }
 
@@ -38,12 +38,11 @@ public class BestEffort {
         int[] res = new int[n];                       // O(n)
         for(int i = 0; i < n; i++){                // n veces
             contadorDespachos += 1;
-            Traslado traslado = masRedituables.BuscarMax();
+            Traslado traslado = masRedituables.maximo();   //O(1)
             res[i] = traslado.id;                 // O(1)
-            posicion = traslado.handle;           // ??       O(1)
-            masRedituables.BorrarMax();                              //O(log T)
-            masAntiguos.BorrarConHandle(posicion);                   //O(log T)
-
+            masRedituables.eliminarMax();                          //O(log T)
+            masAntiguos.eliminar(traslado.posAntiguo());                   //O(log T)
+                                                                      //O(log C)
 
             ganancia[traslado.origen] += traslado.gananciaNeta;
             perdida[traslado.destino] += traslado.gananciaNeta;
@@ -64,8 +63,6 @@ public class BestEffort {
                 perdidaMax = new ArrayList<Integer>();
                 perdidaMax.add(traslado.destino);
             }
-
-
 
             gananciaNetaMundial += traslado.gananciaNeta; 
 
