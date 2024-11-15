@@ -12,7 +12,6 @@ public class ComparadorRedituabilidad implements Comparator<Traslado> {
 public class ComparadorAntiguedad implements Comparator<Traslado> {
     @Override
     public int compare(Traslado t1, Traslado t2) {
-        // Orden ascendente por timestamp
         return Integer.compare(t1.timestamp, t2.timestamp);
     }
 }
