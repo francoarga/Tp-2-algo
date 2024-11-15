@@ -15,37 +15,46 @@ public class BestEffort {
 
 
 
-    public BestEffort(int cantCiudades, Traslado[] traslados){
+    public BestEffort(int cantCiudades, Traslado[] traslados){//O(|T|+|C|)
         gananciaNetaMundial = 0;
         contadorDespachos = 0;
-        gananciaMax = new ArrayList<Integer>();                            // O(C)
-        perdidaMax = new ArrayList<Integer>();                            // O(C)
-        perdida = new int[cantCiudades];                             // O(C)
+        gananciaMax = new ArrayList<Integer>();                             // O(1)
+        perdidaMax = new ArrayList<Integer>();                              // O(1)
+        ganancia = new int[cantCiudades];                                   // O(|C|)  
+        perdida = new int[cantCiudades];                                    // O(|C|)
         masRedituables = null;
         masAntiguos = null;
-        masRedituables.heapify(traslados);                     //      O(T)
-        masAntiguos.heapify(traslados);                              // O(T)
+
+        ArrayList<Traslado> arr = new ArrayList<Traslado>();               //O(|T|)*O(1)
+        for(int i = 0; i < traslados.length; i++){      
+            arr.set(i, traslados[i]);
+        }
+
+        masRedituables.heapify(arr);                                //O(|T|)
+        masAntiguos.heapify(arr);                                  // O(|T|)
     }
 
-    public void registrarTraslados(Traslado[] traslados){
-        for(int i = 0; i < traslados.length; i++){    // |traslados| veces
-            masRedituables.insertar(traslados[i]);                // O(log T)
-            masAntiguos.insertar(traslados[i]);                   // O(log T)
+    public void registrarTraslados(Traslado[] traslados){//O(|T|log|T|)
+        for(int i = 0; i < traslados.length; i++){                 // O(|T|)*O(log|T|)
+            masRedituables.insertar(traslados[i]);                                     // O(log|T|)
+            masAntiguos.insertar(traslados[i]);                                        // O(log|T|)  
         }
     }
 
     public int[] despacharMasRedituables(int n){
         int[] res = new int[n];                       // O(n)
-        for(int i = 0; i < n; i++){                // n veces
+        for(int i = 0; i < n; i++){                // 
             contadorDespachos += 1;
-            Traslado traslado = masRedituables.maximo();   //O(1)
-            res[i] = traslado.id;                 // O(1)
-            masRedituables.eliminarMax();                          //O(log T)
-            masAntiguos.eliminar(traslado.posAntiguo());                   //O(log T)
-                                                                      //O(log C)
+            Traslado traslado = masRedituables.maximo();        //O(1)
+            res[i] = traslado.id;                               //O(1)
+            masRedituables.eliminarElemento(0);                       //O(log|T|)
+            masAntiguos.eliminarElemento(traslado.posAntiguo());        //O(log|T|)
+                                                                //O(log|C|)
 
-            ganancia[traslado.origen] += traslado.gananciaNeta;
-            perdida[traslado.destino] += traslado.gananciaNeta;
+
+            //de acá para abajo todo O(1)
+            ganancia[traslado.origen] += traslado.gananciaNeta; 
+            perdida[traslado.destino] += traslado.gananciaNeta;  
 
 
             if(ganancia[gananciaMax.get(0)] == traslado.gananciaNeta){
