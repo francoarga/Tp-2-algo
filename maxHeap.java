@@ -35,24 +35,34 @@ public class maxHeap {
         return arr.get(0);
     }
 
+    public Traslado obtener(int i){
+        return arr.get(i);
+    }
+
 
     //modifica el handle segun en qué heap se encuentra
     private void cambiaHandle(Traslado elem, int i, Comparator<Traslado> c){
     if (c instanceof ComparadorAntiguedad){
         elem.modificarHandle("Ant", i);
-    } else {
+    } if(c instanceof ComparadorRedituabilidad){
         elem.modificarHandle("Red", i);
+    } if(c instanceof ComparadorSuperavit){
+        elem.modificarHandle("Sup", i);
     }
 }
+
     private void swap(Traslado t1, Traslado t2, Comparator<Traslado> c){
-    int pos1;
-    int pos2;
+    int pos1 = -1;
+    int pos2 = -1;
      if(c instanceof ComparadorAntiguedad){
          pos1 = t1.posAntiguo();
          pos2 = t2.posAntiguo();
-     }else{
+     } if(c instanceof ComparadorRedituabilidad){
          pos1 = t1.posRedituable();
          pos2 = t2.posRedituable();
+     } if(c instanceof ComparadorSuperavit){
+        pos1 = t1.posSuperavit();
+        pos2 = t2.posSuperavit();
      }
      Traslado temp = arr.get(pos1);  
      arr.set(pos1, arr.get(pos2));  
