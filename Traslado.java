@@ -20,9 +20,9 @@ public class Traslado {
 
     public void modificarHandle(String cual, int i){
         if(cual.equals("Red")){
-            handleRed.modificar(i);
+            handleRed = new Handle(i);
         } else {
-            handleAnt.modificar(i);
+            handleAnt = new Handle(i);
         }
     }
 

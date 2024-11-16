@@ -18,15 +18,15 @@ public class maxHeap {
     }
 
     public void heapify(ArrayList<Traslado> t){
-        int i = longitud-1;
-        while(i>=0 && 2*i+2 < longitud && (c.compare(arr.get(i), arr.get(2*i+1)) < 0  || c.compare(arr.get(i), arr.get(2*i+2)) < 0)){  //sift down
-            if(c.compare(arr.get(2*i+1), arr.get(2*i+2)) > 0){   //veo cual hijo es mayor
-                swap(arr.get(2*i+1), arr.get(i), c);
-                i = 2*i+1;
-            } else {
-                swap(arr.get(2*i+2), arr.get(i), c);
-                i = 2*i+2;
-            }
+        arr = t;
+        longitud = t.size();
+        for(int j = 0; j < arr.size();j++){
+            cambiaHandle(arr.get(j), j, c);
+        }
+        int i =  longitud-1;
+        while(i >= 0){
+            siftDOWN(i);
+            i = i-1;
         }
     }
 
@@ -62,34 +62,57 @@ public class maxHeap {
      cambiaHandle(arr.get(pos2), pos2, c);
  }
 
+ private void siftUP(int i){
+    while(i > 0 && c.compare(arr.get(i), arr.get((((i-1)/2)))) > 0){        //Si es mayor que el padre, sift up
+        swap(arr.get(((i-1)/2)), arr.get(i), c);
+        i = (i-1)/2;               
+    }   
+ }
+
+ private void siftDOWN(int i){
+    while(i>=0){
+        if(2*i+2 < longitud){    //tiene dos hijos
+            if((c.compare(arr.get(i), arr.get(2*i+1)) < 0  || c.compare(arr.get(i), arr.get(2*i+2)) < 0)){ //veo si alguno es mayor
+                if(c.compare(arr.get(2*i+1), arr.get(2*i+2)) > 0){   //veo cual hijo es mayor
+                    swap(arr.get(2*i+1), arr.get(i), c);
+                    i = 2*i+1;
+                } else {
+                    swap(arr.get(2*i+2), arr.get(i), c);
+                    i = 2*i+2;
+                }
+            } else {
+                i = -1;
+        }
+    } else { //tiene un hijo o 0
+        if(2*i+1 < longitud){
+            if(c.compare(arr.get(i), arr.get(2*i+1)) < 0){
+                swap(arr.get(2*i+1), arr.get(i), c);
+                i = -1;
+        } else {
+            i = -1;
+        }
+    } else {
+            i = -1;
+        }
+    }  
+}
+ }
+
 
     //insertar elemento al heap
     public void insertar(Traslado elem){
         arr.add(elem);
         longitud +=1;
+        cambiaHandle(elem, longitud-1, c);
         int i = longitud-1;
-
-        while(i >= 1 && c.compare(arr.get(i), arr.get((((i-1)/2)))) > 0){        //Si es mayor que el padre, sift up
-            swap(arr.get(((i-1)/2)), arr.get(i), c);
-            i = (i-1)/2;               
-    }    
+        siftUP(i);
 }
     //eliminar el maximo del heap
-    public void eliminarElemento(int j){
-        Traslado max = arr.get(j);
-        cambiaHandle(max, -1, c);                //cambio el handle del removido
-        arr.set(j, arr.get(longitud-1));         //reemplazo el maximo por el ultimo elemento
-        cambiaHandle(arr.get(j), j, c);         
-
-        int i = 0;
-        while(2*i+2 < longitud && (c.compare(arr.get(i), arr.get(2*i+1)) < 0  || c.compare(arr.get(i), arr.get(2*i+2)) < 0)){ //Si es menor que alguno de los dos hijos, sift down
-            if(c.compare(arr.get(2*i+1), arr.get(2*i+2)) > 0){   //veo cual hijo es mayor
-                swap(arr.get(2*i+1), arr.get(i), c);
-                i = 2*i+1;
-            } else {
-                swap(arr.get(2*i+2), arr.get(i), c);
-                i = 2*i+2;
-            }
-        }
+    public void eliminarElemento(int i){
+        Traslado max = arr.get(i);
+        swap(max, arr.get(longitud-1), c);
+        arr.remove(longitud-1);
+        longitud = longitud -1;
+        siftDOWN(i);
     }
 }

@@ -19,19 +19,27 @@ public class BestEffort {
         gananciaNetaMundial = 0;
         contadorDespachos = 0;
         gananciaMax = new ArrayList<Integer>();                             // O(1)
+        gananciaMax.add(0);
         perdidaMax = new ArrayList<Integer>();                              // O(1)
+        perdidaMax.add(0);
         ganancia = new int[cantCiudades];                                   // O(|C|)  
         perdida = new int[cantCiudades];                                    // O(|C|)
-        masRedituables = null;
-        masAntiguos = null;
+        ComparadorRedituabilidad comR = new ComparadorRedituabilidad();
+        masRedituables = new maxHeap(comR);
+        ComparadorAntiguedad comA = new ComparadorAntiguedad();
+        masAntiguos = new maxHeap(comA);
 
-        ArrayList<Traslado> arr = new ArrayList<Traslado>();               //O(|T|)*O(1)
+        ArrayList<Traslado> arrayR = new ArrayList<Traslado>();               //O(|T|)*O(1)
         for(int i = 0; i < traslados.length; i++){      
-            arr.set(i, traslados[i]);
+            arrayR.add(traslados[i]);
         }
+        masRedituables.heapify(arrayR);                                //O(|T|)
 
-        masRedituables.heapify(arr);                                //O(|T|)
-        masAntiguos.heapify(arr);                                  // O(|T|)
+        ArrayList<Traslado> arrayA = new ArrayList<Traslado>();               //O(|T|)*O(1)
+        for(int i = 0; i < traslados.length; i++){      
+            arrayA.add(traslados[i]);
+        }
+        masAntiguos.heapify(arrayA);                                  // O(|T|)
     }
 
     public void registrarTraslados(Traslado[] traslados){//O(|T|log|T|)
@@ -57,18 +65,18 @@ public class BestEffort {
             perdida[traslado.destino] += traslado.gananciaNeta;  
 
 
-            if(ganancia[gananciaMax.get(0)] == traslado.gananciaNeta){
+            if(gananciaMax.get(gananciaMax.size()-1) != traslado.origen && ganancia[gananciaMax.get(gananciaMax.size()-1)] == ganancia[traslado.origen]){
                 gananciaMax.add(traslado.origen);
             } 
-            if(ganancia[gananciaMax.get(0)] < traslado.gananciaNeta){
+            if(ganancia[gananciaMax.get(gananciaMax.size()-1)] < ganancia[traslado.origen]){
                 gananciaMax = new ArrayList<Integer>();
                 gananciaMax.add(traslado.origen);
             }
 
-            if(perdida[perdidaMax.get(0)] == traslado.gananciaNeta){
+            if(perdidaMax.get(perdidaMax.size()-1) != traslado.destino && perdida[perdidaMax.get(perdidaMax.size()-1)] == perdida[traslado.destino]){
                 perdidaMax.add(traslado.destino);
             } 
-            if(perdida[perdidaMax.get(0)] < traslado.gananciaNeta){
+            if(perdida[perdidaMax.get(perdidaMax.size()-1)] < perdida[traslado.destino]){
                 perdidaMax = new ArrayList<Integer>();
                 perdidaMax.add(traslado.destino);
             }
@@ -80,11 +88,45 @@ public class BestEffort {
     }
 
     public int[] despacharMasAntiguos(int n){
-        return null;
+        int[] res = new int[n];                       // O(n)
+        for(int i = 0; i < n; i++){                // O(n)
+            contadorDespachos += 1;
+            Traslado traslado = masAntiguos.maximo();        //O(1)
+            res[i] = traslado.id;                               //O(1)
+            masAntiguos.eliminarElemento(0);                       //O(log|T|)
+            masRedituables.eliminarElemento(traslado.posRedituable());        //O(log|T|)
+                                                                //O(log|C|)
+
+
+            //de acá para abajo todo O(1)
+            ganancia[traslado.origen] += traslado.gananciaNeta; 
+            perdida[traslado.destino] += traslado.gananciaNeta;  
+
+
+            if(gananciaMax.get(gananciaMax.size()-1) != traslado.origen && ganancia[gananciaMax.get(gananciaMax.size()-1)] == ganancia[traslado.origen]){
+                gananciaMax.add(traslado.origen);
+            } 
+            if(ganancia[gananciaMax.get(gananciaMax.size()-1)] < ganancia[traslado.origen]){
+                gananciaMax = new ArrayList<Integer>();
+                gananciaMax.add(traslado.origen);
+            }
+
+            if(perdidaMax.get(perdidaMax.size()-1) != traslado.destino && perdida[perdidaMax.get(perdidaMax.size()-1)] == perdida[traslado.destino]){
+                perdidaMax.add(traslado.destino);
+            } 
+            if(perdida[perdidaMax.get(perdidaMax.size()-1)] < perdida[traslado.destino]){
+                perdidaMax = new ArrayList<Integer>();
+                perdidaMax.add(traslado.destino);
+            }
+
+            gananciaNetaMundial += traslado.gananciaNeta; 
+
+        }
+        return res;
     }
 
     public int ciudadConMayorSuperavit(){
-        return ;
+        return 0;
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia(){
