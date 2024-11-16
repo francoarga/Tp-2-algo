@@ -10,7 +10,7 @@ public class BestEffort {
     private ArrayList<Integer> perdidaMax;
     private int[] ganancia;
     private int[] perdida;
-    private ArrayList<Integer> handleSuperavit;
+    private Handle[] handleSuperavit;
     private int contadorDespachos;
     private int gananciaNetaMundial;
 
@@ -26,9 +26,9 @@ public class BestEffort {
         ganancia = new int[cantCiudades];                                   // O(|C|)  
         perdida = new int[cantCiudades];                                    // O(|C|)
 
-        handleSuperavit = new ArrayList<Integer>();                           
+        handleSuperavit = new Handle[cantCiudades];                           
         for(int i = 0; i < cantCiudades; i++){   //O(|C|)
-            handleSuperavit.add(-1);
+            handleSuperavit[i] = null;
         }
 
 
@@ -70,28 +70,28 @@ public class BestEffort {
             masAntiguos.eliminarElemento(traslado.posAntiguo());        //O(log|T|)
 
 
-            if(handleSuperavit.get(traslado.origen) != -1){
-                Traslado origen = new Traslado(traslado.id, traslado.origen, -1, traslado.gananciaNeta + masSuperavit.obtener(handleSuperavit.get(traslado.origen)).gananciaNeta, -1);
-                masSuperavit.eliminarElemento(handleSuperavit.get(origen.origen));
+            if(handleSuperavit[traslado.origen] != null){
+                Traslado origen = new Traslado(traslado.id, traslado.origen, -1, traslado.gananciaNeta + masSuperavit.obtener(handleSuperavit[traslado.origen].valor()).gananciaNeta, -1);
+                masSuperavit.eliminarElemento(handleSuperavit[origen.origen].valor());
                 masSuperavit.insertar(origen);                                         //O(log|C|) pues el heap nunca tendra más elementos que cantidad de ciudades, antes de insertar elimino la ciudad para que no se repitan.
-                handleSuperavit.set(origen.origen, origen.posSuperavit());    //falta el aliasing...
+                handleSuperavit[origen.origen] = origen.handleSup; 
 
             } else {
                 Traslado origen = new Traslado(traslado.id, traslado.origen, -1, traslado.gananciaNeta, -1);
                 masSuperavit.insertar(origen);
-                handleSuperavit.set(origen.origen, origen.posSuperavit());
+                handleSuperavit[origen.origen] = origen.handleSup;
             }
 
-            if(handleSuperavit.get(traslado.destino) != -1){
-                Traslado destino = new Traslado(traslado.id, -1, traslado.destino, -traslado.gananciaNeta + masSuperavit.obtener(handleSuperavit.get(traslado.destino)).gananciaNeta, -1);
-                masSuperavit.eliminarElemento(handleSuperavit.get(destino.destino));
+            if(handleSuperavit[traslado.destino] != null){
+                Traslado destino = new Traslado(traslado.id, -1, traslado.destino, -traslado.gananciaNeta + masSuperavit.obtener(handleSuperavit[traslado.destino].valor()).gananciaNeta, -1);
+                masSuperavit.eliminarElemento(handleSuperavit[destino.destino].valor());
                 masSuperavit.insertar(destino);                                         //O(log|C|) pues el heap nunca tendra más elementos que cantidad de ciudades, antes de insertar elimino la ciudad para que no se repitan.
-                handleSuperavit.set(destino.destino, destino.posSuperavit());
+                handleSuperavit[destino.destino] = destino.handleSup;
 
             } else {
                 Traslado destino = new Traslado(traslado.id, -1, traslado.destino, -traslado.gananciaNeta, -1);
                 masSuperavit.insertar(destino);
-                handleSuperavit.set(destino.destino, destino.posSuperavit());
+                handleSuperavit[destino.destino] = destino.handleSup;
             }
 
 
@@ -131,28 +131,28 @@ public class BestEffort {
             masAntiguos.eliminarElemento(0);                       //O(log|T|)
             masRedituables.eliminarElemento(traslado.posRedituable());        //O(log|T|)
             
-            if(handleSuperavit.get(traslado.origen) != -1){
-                Traslado origen = new Traslado(traslado.id, traslado.origen, -1, traslado.gananciaNeta + masSuperavit.obtener(handleSuperavit.get(traslado.origen)).gananciaNeta, -1);
-                masSuperavit.eliminarElemento(handleSuperavit.get(origen.origen));
+            if(handleSuperavit[traslado.origen] != null){
+                Traslado origen = new Traslado(traslado.id, traslado.origen, -1, traslado.gananciaNeta + masSuperavit.obtener(handleSuperavit[traslado.origen].valor()).gananciaNeta, -1);
+                masSuperavit.eliminarElemento(handleSuperavit[origen.origen].valor());
                 masSuperavit.insertar(origen);                                         //O(log|C|) pues el heap nunca tendra más elementos que cantidad de ciudades, antes de insertar elimino la ciudad para que no se repitan.
-                handleSuperavit.set(origen.origen, origen.posSuperavit());
+                handleSuperavit[origen.origen] = origen.handleSup; 
 
             } else {
                 Traslado origen = new Traslado(traslado.id, traslado.origen, -1, traslado.gananciaNeta, -1);
                 masSuperavit.insertar(origen);
-                handleSuperavit.set(origen.origen, origen.posSuperavit());
+                handleSuperavit[origen.origen] = origen.handleSup;
             }
 
-            if(handleSuperavit.get(traslado.destino) != -1){
-                Traslado destino = new Traslado(traslado.id, -1, traslado.destino, -traslado.gananciaNeta + masSuperavit.obtener(handleSuperavit.get(traslado.destino)).gananciaNeta, -1);
-                masSuperavit.eliminarElemento(handleSuperavit.get(destino.destino));
+            if(handleSuperavit[traslado.destino] != null){
+                Traslado destino = new Traslado(traslado.id, -1, traslado.destino, -traslado.gananciaNeta + masSuperavit.obtener(handleSuperavit[traslado.destino].valor()).gananciaNeta, -1);
+                masSuperavit.eliminarElemento(handleSuperavit[destino.destino].valor());
                 masSuperavit.insertar(destino);                                         //O(log|C|) pues el heap nunca tendra más elementos que cantidad de ciudades, antes de insertar elimino la ciudad para que no se repitan.
-                handleSuperavit.set(destino.destino, destino.posSuperavit());
+                handleSuperavit[destino.destino] = destino.handleSup;
 
             } else {
                 Traslado destino = new Traslado(traslado.id, -1, traslado.destino, -traslado.gananciaNeta, -1);
                 masSuperavit.insertar(destino);
-                handleSuperavit.set(destino.destino, destino.posSuperavit());
+                handleSuperavit[destino.destino] = destino.handleSup;
             }
 
             //de acá para abajo todo O(1)

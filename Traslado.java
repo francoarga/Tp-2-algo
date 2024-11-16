@@ -7,9 +7,9 @@ public class Traslado {
     int destino;
     int gananciaNeta;
     int timestamp;
-    Handle handleRed;
-    Handle handleAnt;
-    Handle handleSup;
+    Handle handleRed = new Handle(-1);
+    Handle handleAnt = new Handle(-1);
+    Handle handleSup = new Handle(-1);
 
     public Traslado(int id, int origen, int destino, int gananciaNeta, int timestamp){
         this.id = id;
@@ -21,11 +21,11 @@ public class Traslado {
 
     public void modificarHandle(String cual, int i){
         if(cual.equals("Red")){
-            handleRed = new Handle(i);
+            handleRed.modificar(i);
         } if(cual.equals("Ant")) {
-            handleAnt = new Handle(i);
+            handleAnt.modificar(i);
         } if (cual.equals("Sup")){
-            handleSup = new Handle(i);
+            handleSup.modificar(i);
         }
     }
 

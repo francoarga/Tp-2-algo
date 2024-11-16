@@ -8,8 +8,10 @@ public class Handle {
         valor = v;
     }
 
-
     public int valor(){
         return valor;
+    }
+    public void modificar(int i){
+        valor = i;
     }
 }
