@@ -3,9 +3,9 @@ package aed;
 import java.util.ArrayList;
 
 public class BestEffort {
-    private maxHeap masRedituables;   
-    private maxHeap masAntiguos;
-    private maxHeap masSuperavit;
+    private maxHeap<Traslado> masRedituables;   
+    private maxHeap<Traslado> masAntiguos;
+    private maxHeap<Traslado> masSuperavit;
     private ArrayList<Integer> gananciaMax;
     private ArrayList<Integer> perdidaMax;
     private int[] ganancia;
@@ -34,11 +34,11 @@ public class BestEffort {
 
 
         ComparadorRedituabilidad comR = new ComparadorRedituabilidad();
-        masRedituables = new maxHeap(comR);                                 //O(1)
+        masRedituables = new maxHeap<Traslado>(comR);                                 //O(1)
         ComparadorAntiguedad comA = new ComparadorAntiguedad();
-        masAntiguos = new maxHeap(comA);                                    //O(1)
+        masAntiguos = new maxHeap<Traslado>(comA);                                    //O(1)
         ComparadorSuperavit comS = new ComparadorSuperavit();
-        masSuperavit = new maxHeap(comS);                                     //O(1)
+        masSuperavit = new maxHeap<Traslado>(comS);                                     //O(1)
 
         ArrayList<Traslado> arrayR = new ArrayList<Traslado>();          
         for(int i = 0; i < traslados.length; i++){                       //O(|T|)*O(1)

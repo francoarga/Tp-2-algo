@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 
 
-public class maxHeap {
+public class maxHeap<T> {
     private ArrayList<Traslado> arr;
     private Integer longitud;
     private Comparator<Traslado> c;
@@ -17,6 +17,7 @@ public class maxHeap {
         c = com;
     }
 
+    //heapify
     public void heapify(ArrayList<Traslado> t){
         arr = t;
         longitud = t.size();
@@ -35,8 +36,17 @@ public class maxHeap {
         return arr.get(0);
     }
 
+    //devuelve el elemento i-ésimo del heap
     public Traslado obtener(int i){
         return arr.get(i);
+    }
+
+    //devuelve atributos (usado en tests)
+    public ArrayList<Traslado> array(){
+        return arr;
+    }
+    public int longitud(){
+        return longitud;
     }
 
 
@@ -51,9 +61,11 @@ public class maxHeap {
     }
 }
 
+    //intercambia dos elementos del heap
     private void swap(Traslado t1, Traslado t2, Comparator<Traslado> c){
     int pos1 = -1;
     int pos2 = -1;
+
      if(c instanceof ComparadorAntiguedad){
          pos1 = t1.posAntiguo();
          pos2 = t2.posAntiguo();
@@ -64,6 +76,7 @@ public class maxHeap {
         pos1 = t1.posSuperavit();
         pos2 = t2.posSuperavit();
      }
+
      Traslado temp = arr.get(pos1);  
      arr.set(pos1, arr.get(pos2));  
      arr.set(pos2, temp);  
@@ -72,41 +85,44 @@ public class maxHeap {
      cambiaHandle(arr.get(pos2), pos2, c);
  }
 
- private void siftUP(int i){
-    while(i > 0 && c.compare(arr.get(i), arr.get((((i-1)/2)))) > 0){        //Si es mayor que el padre, sift up
-        swap(arr.get(((i-1)/2)), arr.get(i), c);
-        i = (i-1)/2;               
-    }   
- }
+    //sube un elemento del heap
+    private void siftUP(int i){
+        while(i > 0 && c.compare(arr.get(i), arr.get((((i-1)/2)))) > 0){        //Si es mayor que el padre, sift up
+            swap(arr.get(((i-1)/2)), arr.get(i), c);
+            i = (i-1)/2;               
+        }   
+    }
 
- private void siftDOWN(int i){
-    while(i>=0){
-        if(2*i+2 < longitud){    //tiene dos hijos
-            if((c.compare(arr.get(i), arr.get(2*i+1)) < 0  || c.compare(arr.get(i), arr.get(2*i+2)) < 0)){ //veo si alguno es mayor
-                if(c.compare(arr.get(2*i+1), arr.get(2*i+2)) > 0){   //veo cual hijo es mayor
-                    swap(arr.get(2*i+1), arr.get(i), c);
-                    i = 2*i+1;
-                } else {
-                    swap(arr.get(2*i+2), arr.get(i), c);
-                    i = 2*i+2;
-                }
-            } else {
-                i = -1;
-        }
-    } else { //tiene un hijo o 0
-        if(2*i+1 < longitud){
-            if(c.compare(arr.get(i), arr.get(2*i+1)) < 0){
-                swap(arr.get(2*i+1), arr.get(i), c);
-                i = -1;
-        } else {
-            i = -1;
-        }
-    } else {
-            i = -1;
-        }
-    }  
-}
- }
+
+    //baja un elemento del heap
+    private void siftDOWN(int i){
+        while(i>=0){
+            if(2*i+2 < longitud){    //tiene dos hijos
+                if((c.compare(arr.get(i), arr.get(2*i+1)) < 0  || c.compare(arr.get(i), arr.get(2*i+2)) < 0)){ //veo si alguno es mayor
+                    if(c.compare(arr.get(2*i+1), arr.get(2*i+2)) > 0){   //veo cual hijo es mayor
+                        swap(arr.get(2*i+1), arr.get(i), c);
+                         i = 2*i+1;
+                        } else {
+                            swap(arr.get(2*i+2), arr.get(i), c);
+                            i = 2*i+2;
+                         }
+                        } else {
+                            i = -1;
+                        }
+                    } else { //tiene un hijo o 0
+                        if(2*i+1 < longitud){
+                            if(c.compare(arr.get(i), arr.get(2*i+1)) < 0){
+                                swap(arr.get(2*i+1), arr.get(i), c);
+                                i = -1;
+                            } else {
+                                i = -1;
+                             }
+                            } else {
+                                i = -1;
+                             }
+                            } 
+                        }
+                    }
 
 
     //insertar elemento al heap
@@ -117,6 +133,8 @@ public class maxHeap {
         int i = longitud-1;
         siftUP(i);
 }
+
+
     //eliminar el maximo del heap
     public void eliminarElemento(int i){
         Traslado max = arr.get(i);
